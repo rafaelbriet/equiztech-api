@@ -7,7 +7,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $response = create_category();
         break;
     case 'GET':
-        $response = get_categories();
+        if (isset($_GET)) {
+            $id = $_GET['id'];
+            $response = get_category_by_id($id);
+        } else {
+            $response = get_categories();
+        }
         break;     
     default:
         $response = [
@@ -62,6 +67,32 @@ function get_categories() {
         $response = [
             "categorias" => $result->fetch_all(MYSQLI_ASSOC)
         ];
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
+}
+
+function get_category_by_id($id) {
+    $response = [];
+
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('SELECT id, nome FROM categorias WHERE id = ?');
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+        
+        if ($result->num_rows > 0) {
+            $response = $result->fetch_assoc();
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
+            ];
+        }
     } catch (\Throwable $th) {
         $response = [
             'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
