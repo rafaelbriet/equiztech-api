@@ -17,11 +17,49 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'PUT':
         $response = update_user();
         break;
+    case 'DELETE':
+        $response = delete_user();
+        break; 
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function delete_user() {
+    $user_id = $_GET['id'];
+
+    try {
+        $connection = create_connection();
+        $user = get_user_by_id($user_id);
+
+        if (!isset($user['erro'])) {
+            $query = $connection->prepare('DELETE FROM usuarios WHERE id = ?');
+            $query->bind_param('i', $user['usuario']['id']);
+            $query->execute();
+
+            $query = $connection->prepare('DELETE FROM dados_pessoais WHERE id = ?');
+            $query->bind_param('i', $user['usuario']['id_dados_pessoais']);
+            $query->execute();
+
+            $response = [];
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
+            ];
+        }
+
+        $query = $connection->prepare('DELETE FROM categorias WHERE id = ?');
+        $query->bind_param('i', $category_id);
+        $query->execute();
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function update_user() {
