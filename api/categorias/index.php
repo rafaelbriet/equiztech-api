@@ -6,6 +6,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $response = create_category();
         break;
+    case 'GET':
+        $response = get_categories();
+        break;     
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
@@ -38,6 +41,27 @@ function create_category() {
                 ]
             ];
         }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
+}
+
+function get_categories() {
+    $response = [];
+
+    try {
+        $connection = create_connection();
+
+        $query = $connection->prepare('SELECT id, nome FROM categorias');
+        $query->execute();
+        $result = $query->get_result();
+        $response = [
+            "categorias" => $result->fetch_all(MYSQLI_ASSOC)
+        ];
     } catch (\Throwable $th) {
         $response = [
             'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
