@@ -16,12 +16,40 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break; 
     case 'PUT':
         $response = update_category();
-        break;    
+        break;
+    case 'DELETE':
+        $response = delete_category();
+        break; 
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function delete_category() {
+    $category_id = $_GET['id'];
+
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('DELETE FROM categorias WHERE id = ?');
+        $query->bind_param('i', $category_id);
+        $query->execute();
+        
+        if ($query->affected_rows > 0) {
+            $response = [];
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
+            ];
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function update_category() {
