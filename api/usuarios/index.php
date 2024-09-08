@@ -13,12 +13,82 @@ switch ($_SERVER['REQUEST_METHOD']) {
         } else {
             $response = get_users();
         }
-        break; 
+        break;
+    case 'PUT':
+        $response = update_user();
+        break;
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function update_user() {
+    $request_body = file_get_contents('php://input');
+    $data = json_decode($request_body, true);
+    $user_id = $_GET['id'];
+    $user_email = $data['usuario']['email'];
+    $user_password = $data['usuario']['senha'];
+    $user_password_hashed = password_hash($user_password, PASSWORD_BCRYPT);
+    $user_access_level_id = $data['usuario']['id_nivel_acesso']; 
+    $user_personal_data_id = $data['usuario']['id_dados_pessoais'];
+    $user_name = $data['usuario']['nome'];
+    $user_surname = $data['usuario']['sobrenome'];
+    $user_birthday = $data['usuario']['data_nascimento'];
+    $user_birthday_date = date("Y-m-d", strtotime($user_birthday));
+    $user_bio = $data['usuario']['biografia'];
+    $user_photo = $data['usuario']['nome_foto'];
+
+    try {
+        $connection = create_connection();
+        $user_already_exist = get_user_by_email($user_email);
+        $user_own_email = $user_already_exist ? $user_already_exist['id'] == $user_id : true;
+
+        if ($user_already_exist && !$user_own_email) {
+            $response = [
+                'erro' => [ 'mensagem' => 'Já existe um usuário cadastrado com esse e-mail.' ],
+            ];
+        } else {
+            $query = $connection->prepare('UPDATE dados_pessoais SET nome = ?, sobrenome = ?, data_nascimento = ?, biografia = ?, nome_foto = ? WHERE id = ?');
+            $query->bind_param('sssssi', $user_name, $user_surname, $user_birthday_date, $user_bio, $user_photo, $user_personal_data_id);
+            $query->execute();
+
+            if ($user_password) {
+                if ($user_already_exist) {
+                    $query = $connection->prepare('UPDATE usuarios SET senha = ?, id_nivel_acesso = ? WHERE id = ?');
+                    $query->bind_param('sii', $user_password_hashed, $user_access_level_id, $user_id);
+                } else {
+                    $query = $connection->prepare('UPDATE usuarios SET email = ?, senha = ?, id_nivel_acesso = ? WHERE id = ?');
+                    $query->bind_param('ssii', $user_email, $user_password_hashed, $user_access_level_id, $user_id);
+                }
+            } else {
+                if ($user_already_exist) {
+                    $query = $connection->prepare('UPDATE usuarios SET id_nivel_acesso = ? WHERE id = ?');
+                    $query->bind_param('ii', $user_access_level_id, $user_id);
+                } else {
+                    $query = $connection->prepare('UPDATE usuarios SET email = ?, id_nivel_acesso = ? WHERE id = ?');
+                    $query->bind_param('sii', $user_email, $user_access_level_id, $user_id);
+                }
+            }
+
+            $query->execute();
+
+            if ($query->affected_rows > 0) {
+                $response = [ 'usuario' => get_user_by_id($user_id) ];
+            } else {
+                $response = [
+                    'erro' => [ 'mensagem' => 'Não foi possivel encontrar um usuário com o ID fornecido.' ]
+                ];
+            }
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function create_user() {
@@ -117,7 +187,7 @@ function get_user_by_id($id) {
         
         if ($result->num_rows > 0) {
             $response = [
-                "usuário" => $result->fetch_assoc()
+                "usuario" => $result->fetch_assoc()
             ];
         } else {
             $response = [
