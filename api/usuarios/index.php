@@ -7,7 +7,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $response = create_user();
         break;
     case 'GET':
-        $response = get_users();
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $response = get_user_by_id($id);
+        } else {
+            $response = get_users();
+        }
         break; 
     default:
         $response = [
@@ -93,6 +98,32 @@ function get_users() {
         $response = [
             "usuarios" => $result->fetch_all(MYSQLI_ASSOC)
         ];
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
+}
+
+function get_user_by_id($id) {
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('SELECT usuarios.id as id, email, termos_condicoes, id_nivel_acesso, nivel_acesso.nome as nome_nivel_acesso, id_dados_pessoais, dados_pessoais.nome as nome, sobrenome, data_nascimento, biografia, nome_foto, criado_em FROM usuarios INNER JOIN dados_pessoais ON dados_pessoais.id = usuarios.id INNER JOIN nivel_acesso ON nivel_acesso.id = id_nivel_acesso WHERE usuarios.id = ?;');
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+        
+        if ($result->num_rows > 0) {
+            $response = [
+                "usuário" => $result->fetch_assoc()
+            ];
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi possivel encontrar um usuário com o ID fornecido.' ]
+            ];
+        }
     } catch (\Throwable $th) {
         $response = [
             'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
