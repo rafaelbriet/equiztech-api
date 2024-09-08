@@ -13,12 +13,56 @@ switch ($_SERVER['REQUEST_METHOD']) {
         } else {
             $response = get_categories();
         }
+        break; 
+    case 'PUT':
+        $response = update_category();
         break;     
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function update_category() {
+    $request_body = file_get_contents('php://input');
+    $data = json_decode($request_body, true);
+    $category_name = $data['categoria']['nome'];
+    $category_id = $_GET['id'];
+
+    try {
+        $connection = create_connection();
+        $category_already_exist = get_category_by_name($category_name);
+
+        if ($category_already_exist) {
+            $response = [
+                'erro' => [ 'mensagem' => 'Já existe uma categoria cadastrada com esse nome.' ]
+            ];
+        } else {
+            $query = $connection->prepare('UPDATE categorias SET nome = ? WHERE id = ?');
+            $query->bind_param('si', $category_name, $category_id);
+            $query->execute();
+            
+            if ($query->affected_rows > 0) {
+                $response = $response = [
+                    "categoria" => [
+                        "id" => $category_id,
+                        "nome" => $category_name,
+                    ]
+                ];
+            } else {
+                $response = [
+                    'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
+                ];
+            }
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function create_category() {
