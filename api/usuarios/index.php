@@ -6,6 +6,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $response = create_user();
         break;
+    case 'GET':
+        $response = get_users();
+        break; 
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
@@ -71,6 +74,25 @@ function create_user() {
                 ]
             ];
         }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
+}
+
+function get_users() {
+    try {
+        $connection = create_connection();
+
+        $query = $connection->prepare('SELECT usuarios.id as id, email, termos_condicoes, id_nivel_acesso, nivel_acesso.nome as nome_nivel_acesso, id_dados_pessoais, dados_pessoais.nome as nome, sobrenome, data_nascimento, biografia, nome_foto, criado_em FROM usuarios INNER JOIN dados_pessoais ON dados_pessoais.id = usuarios.id INNER JOIN nivel_acesso ON nivel_acesso.id = id_nivel_acesso;');
+        $query->execute();
+        $result = $query->get_result();
+        $response = [
+            "usuarios" => $result->fetch_all(MYSQLI_ASSOC)
+        ];
     } catch (\Throwable $th) {
         $response = [
             'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
