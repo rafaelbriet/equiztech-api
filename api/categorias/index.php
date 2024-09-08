@@ -7,7 +7,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $response = create_category();
         break;
     case 'GET':
-        if (isset($_GET)) {
+        if (isset($_GET['id'])) {
             $id = $_GET['id'];
             $response = get_category_by_id($id);
         } else {
@@ -16,7 +16,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break; 
     case 'PUT':
         $response = update_category();
-        break;     
+        break;    
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
