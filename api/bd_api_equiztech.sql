@@ -7,6 +7,23 @@ CREATE TABLE categorias (
     nome VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE perguntas(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    texto_pergunta TEXT NOT NULL,
+    explicacao TEXT,
+    ativo CHAR(1) NOT NULL,
+    id_categoria INT NULL,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id)
+);
+
+CREATE TABLE respostas(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    texto_alternativa TEXT NOT NULL,
+    correta CHAR(1) NOT NULL,
+    id_pergunta INT,
+    FOREIGN KEY (id_pergunta) REFERENCES perguntas(id)
+);
+
 CREATE TABLE nivel_acesso(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL
