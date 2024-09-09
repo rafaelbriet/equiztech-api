@@ -6,11 +6,67 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $response = create_question();
         break;
+    case 'GET':
+        $response = get_questions();
+        break;
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function get_questions() {
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('SELECT id , texto_pergunta, explicacao, ativo FROM perguntas');
+        $query->execute();
+        $result = $query->get_result();
+
+        if ($result->num_rows > 0) {
+            $response = [ 'perguntas' => [] ];
+
+            while ($row = $result->fetch_assoc()) {
+                array_push($response['perguntas'], array_merge($row, get_answers_by_question_id($row['id'])));
+            }
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi encontrado uma pergunta com o ID fornecido.' ]
+            ];
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
+}
+
+function get_answers_by_question_id($id) {
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('SELECT id, texto_alternativa, correta FROM respostas WHERE id_pergunta = ?');
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+        
+        if ($result->num_rows > 0) {
+            $response = [
+                "respostas" => $result->fetch_all(MYSQLI_ASSOC)
+            ];
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi encontrado uma pergunta com o ID fornecido.' ]
+            ];
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function create_question() {
