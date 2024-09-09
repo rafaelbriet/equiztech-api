@@ -7,13 +7,46 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $response = create_question();
         break;
     case 'GET':
-        $response = get_questions();
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $response = get_questions_by_id($id);
+        } else {
+            $response = get_questions();
+        }
         break;
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function get_questions_by_id($id) {
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('SELECT id , texto_pergunta, explicacao, ativo FROM perguntas WHERE id = ?');
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+
+        if ($result->num_rows > 0) {
+            $response = [ 'perguntas' => [] ];
+
+            while ($row = $result->fetch_assoc()) {
+                array_push($response['perguntas'], array_merge($row, get_answers_by_question_id($row['id'])));
+            }
+        } else {
+            $response = [
+                'erro' => [ 'mensagem' => 'Não foi encontrado uma pergunta com o ID fornecido.' ]
+            ];
+        }
+    } catch (\Throwable $th) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+        ];
+    }
+
+    return $response;
 }
 
 function get_questions() {
