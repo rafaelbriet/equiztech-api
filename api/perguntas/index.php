@@ -1,5 +1,9 @@
 <?php
 
+require('../autenticacao/functions.php');
+
+only_admin_allowed();
+
 require_once('../../dbconnection.php');
 
 switch ($_SERVER['REQUEST_METHOD']) {

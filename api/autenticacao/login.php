@@ -30,9 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $access_level_query->execute();
                 $access_level_result = $access_level_query->get_result();
                 $access_level = $access_level_result->fetch_assoc();
-
+                // Login válido por 7 dias
+                $expire_time = 7 * 24 * 60 * 60;
                 $payload = [
-                    'exp' => time() + 10,
+                    'exp' => time() + $expire_time,
                     'iat' => time(),
                     'usuario' => [
                         'id' => $usuario['id'],
