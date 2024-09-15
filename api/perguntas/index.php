@@ -14,11 +14,48 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $response = get_questions();
         }
         break;
+    case 'PUT':
+        $response = update_question();
+        break;
     default:
         $response = [
             'erro' => [ 'mensagem' => 'Método HTTP não suportado.' ]
         ];
         break;
+}
+
+function update_question() {
+    $request_body = file_get_contents('php://input');
+    $data = json_decode($request_body, true);
+    $question_id = $_GET['id'];
+
+    try {
+        $connection = create_connection();
+        $query = $connection->prepare('UPDATE perguntas SET texto_pergunta = ? , explicacao = ?, ativo = ?, id_categoria = ? WHERE id = ?');
+        $query->bind_param('ssiii', $data['pergunta']['texto_pergunta'], $data['pergunta']['explicacao'], $data['pergunta']['ativo'], $data['pergunta']['id_categoria'], $question_id);
+        $query->execute();
+
+        foreach ($data['pergunta']['respostas'] as $answer) {
+            $query = $connection->prepare('UPDATE respostas SET texto_alternativa = ?, correta = ? WHERE id = ?');
+            $query->bind_param('sii', $answer['texto_alternativa'], $answer['correta'], $answer['id']);
+            $query->execute();
+            if ($query->affected_rows > 0) {
+                echo 'update ok';
+            }
+        }
+
+        $response = [
+            "pergunta" => get_questions_by_id($question_id)
+        ];
+
+    } catch (\Throwable $th) {
+        $response = [
+            // 'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+            'erro' => [ 'mensagem' => $th->getMessage() ]
+        ];
+    }
+
+    return $response;
 }
 
 function get_questions_by_id($id) {
