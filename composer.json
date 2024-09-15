@@ -16,8 +16,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "api\\": "api"
+            "app\\": "."
         }
     },
-    "require": {}
+    "require": {
+        "firebase/php-jwt": "^6.10",
+        "vlucas/phpdotenv": "^5.6"
+    }
 }
