@@ -6,14 +6,14 @@ use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 function only_admin_allowed() {
     if (!isset($_COOKIE['TOKEN'])) {
         echo 'Você precisa estar logado para acessar esta página. <a href="#">Voltar para o login.</a>';
         exit;
     }
-    
-    $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-    $dotenv->load();
     
     $authorization = $_COOKIE['TOKEN'];
     $token = trim(str_replace('Bearer', '', $authorization));
@@ -28,6 +28,10 @@ function only_admin_allowed() {
         echo 'Você não tem permissão para acessar esta página. <a href="#">Voltar para o login.</a>';
         exit;
     }
+}
+
+function get_image($name) {
+    echo $_ENV['BASE_URL'] . '/dashboard/images/' . $name;
 }
 
 function get_partial($name) {

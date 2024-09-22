@@ -2,7 +2,7 @@
     <div class="offcanvas-md offcanvas-end" id="sidebarMenu">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="sidebarMenuLabel">
-                <img src="./images/logo_equiztech.svg" alt="Logo Equiztech" height="32">
+                <img src="<?php get_image('logo_equiztech.svg'); ?>" alt="Logo Equiztech" height="32">
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Fechar"></button>
         </div>
