@@ -32,39 +32,40 @@ get_partial('nav');
             $response = json_decode($response_json, true);
 
             ?>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nome completo</th>
-                        <th>Email</th>
-                        <th>Data de nascimento</th>
-                        <th>Nível de acesso</th>
-                        <th>Editar</th>
-                        <th>Exluir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($response['usuarios'] as $user) : ?>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td><?php echo $user['nome'] . ' ' . $user['sobrenome']; ?></td>
-                            <td><?php echo $user['email']; ?></td>
-                            <td><?php echo $user['data_nascimento']; ?></td>
-                            <td><?php echo $user['nome_nivel_acesso']; ?></td>
-                            <td>
-                                <a href="edit.php/?id=<?php echo $user['id']; ?>" class="btn btn-secondary">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="delete.php/?id=<?php echo $user['id']; ?>" class="btn btn-danger">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                            </td>
+                            <th>Nome completo</th>
+                            <th>Email</th>
+                            <th>Data de nascimento</th>
+                            <th>Nível de acesso</th>
+                            <th>Editar</th>
+                            <th>Exluir</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($response['usuarios'] as $user) : ?>
+                            <tr>
+                                <td><?php echo $user['nome'] . ' ' . $user['sobrenome']; ?></td>
+                                <td><?php echo $user['email']; ?></td>
+                                <td><?php echo $user['data_nascimento']; ?></td>
+                                <td><?php echo $user['nome_nivel_acesso']; ?></td>
+                                <td>
+                                    <a href="edit.php/?id=<?php echo $user['id']; ?>" class="btn btn-secondary">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="delete.php/?id=<?php echo $user['id']; ?>" class="btn btn-danger">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 </div>
