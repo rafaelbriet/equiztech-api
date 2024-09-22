@@ -1,6 +1,6 @@
 <?php
 
-require('../vendor/autoload.php');
+require(dirname(__FILE__) . '/../vendor/autoload.php');
 
 use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
@@ -44,4 +44,10 @@ function get_header() {
 
 function get_footer() {
     get_partial('footer');
+}
+
+function dump($value) {
+    echo '<pre>';
+    var_dump($value);
+    echo '</pre>';
 }
