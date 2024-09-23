@@ -3,3 +3,7 @@
         border-width: 0 !important;
     }
 }
+
+.form-dashboard {
+    max-width: 600px;
+}
