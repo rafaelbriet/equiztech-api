@@ -10,8 +10,6 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const token = document.cookie.split(';')[0].split('=')[1];
-        console.log(token);
-        
         const response = await fetch('http://localhost/equiztech/api/categorias/', {
             method: 'POST',
             headers: {
