@@ -163,7 +163,9 @@ function get_category_by_id($id) {
         $result = $query->get_result();
         
         if ($result->num_rows > 0) {
-            $response = $result->fetch_assoc();
+            $response = [
+                "categoria" => $result->fetch_assoc()
+            ];
         } else {
             $response = [
                 'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
