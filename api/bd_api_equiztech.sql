@@ -52,3 +52,10 @@ CREATE TABLE usuarios(
     FOREIGN KEY (id_dados_pessoais) REFERENCES dados_pessoais(id),
     FOREIGN KEY (id_nivel_acesso) REFERENCES nivel_acesso(id)
 );
+
+-- INSERT USUARIO PADRÂO 
+insert into dados_pessoais (nome, sobrenome, data_nascimento)
+values ('Rafael', 'Briet', '1991-12-14'); 
+   
+insert into usuarios (email, senha, termos_condicoes, id_dados_pessoais, id_nivel_acesso)
+values ('rafael@mail.com', '$2y$10$fC8ldodiZQ.LlPmqKDGWjORKxC5Jesok93UKB8OeilET1aUq0fTey', 1, 1, 1);
