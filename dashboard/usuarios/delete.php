@@ -38,7 +38,7 @@ $response = json_decode($response_json, true);
 
                     <form class="form-dashboard">
                         <div class="mb-3">
-                            <input type="hidden" class="form-control" id="categoryId" value="<?php echo $response['usuario']['id']; ?>">
+                            <input type="hidden" class="form-control" id="userId" value="<?php echo $response['usuario']['id']; ?>">
                             <p class="form-text text-danger d-none" id="categoryName-duplicate">Não foi possível deletar o usuário no momento. Tente novamente.</p>
                         </div>
                         <div class="d-flex gap-2 justify-content-end">
@@ -58,6 +58,7 @@ $response = json_decode($response_json, true);
                         </div>
                     </div>
                 </div>
+                <script src="<?php echo $_ENV['BASE_URL']; ?>/dashboard/usuarios/delete.js"></script>
             <?php endif; ?>
         </main>
     </div>
