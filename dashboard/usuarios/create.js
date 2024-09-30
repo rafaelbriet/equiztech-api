@@ -19,7 +19,7 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-        const token = document.cookie.split(';')[0].split('=')[1];
+        const token = Cookies.get('TOKEN');
         const response = await fetch('http://localhost/equiztech/api/usuarios/', {
             method: 'POST',
             headers: {
