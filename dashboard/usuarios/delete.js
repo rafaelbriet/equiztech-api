@@ -5,7 +5,7 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const token = Cookies.get('TOKEN');
-        const response = await fetch('http://localhost/equiztech/api/usuarios/?id=' + form.elements.userId.value, {
+        const response = await fetch(CONFIG.base_url + '/api/usuarios/?id=' + form.elements.userId.value, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",

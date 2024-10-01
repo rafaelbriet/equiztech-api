@@ -10,7 +10,7 @@ form.addEventListener('submit', async (e) => {
 
     try {
         const token = Cookies.get('TOKEN');
-        const response = await fetch('http://localhost/equiztech/api/categorias/', {
+        const response = await fetch(CONFIG.base_url + '/api/categorias/', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
