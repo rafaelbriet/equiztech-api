@@ -98,7 +98,7 @@ function update_question() {
 function get_questions_by_id($id) {
     try {
         $connection = create_connection();
-        $query = $connection->prepare('SELECT id , texto_pergunta, explicacao, ativo FROM perguntas WHERE id = ?');
+        $query = $connection->prepare('SELECT perguntas.id, texto_pergunta, explicacao, ativo, id_categoria, categorias.nome AS nome_categoria FROM perguntas INNER JOIN categorias ON categorias.id = perguntas.id_categoria WHERE perguntas.id = ?');
         $query->bind_param('i', $id);
         $query->execute();
         $result = $query->get_result();
@@ -126,7 +126,7 @@ function get_questions_by_id($id) {
 function get_questions() {
     try {
         $connection = create_connection();
-        $query = $connection->prepare('SELECT id , texto_pergunta, explicacao, ativo FROM perguntas');
+        $query = $connection->prepare('SELECT perguntas.id, texto_pergunta, explicacao, ativo, id_categoria, categorias.nome AS nome_categoria FROM perguntas INNER JOIN categorias ON categorias.id = perguntas.id_categoria');
         $query->execute();
         $result = $query->get_result();
 
