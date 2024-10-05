@@ -12,7 +12,7 @@
                 <li class="navitem"><a href="#" class="nav-link">Meu perfil</a></li>
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/usuarios" class="nav-link">Usuários</a></li>
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/categorias" class="nav-link">Categorias</a></li>
-                <li class="navitem"><a href="#" class="nav-link">Quizes</a></li>
+                <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/quizzes" class="nav-link">Quizes</a></li>
             </ul>
             <hr class="my-1">
             <ul class="nav flex-column">
