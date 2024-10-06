@@ -16,7 +16,7 @@
             </ul>
             <hr class="my-1">
             <ul class="nav flex-column">
-                <li class="navitem"><a href="#" class="nav-link">Sair</a></li>
+                <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/logout" class="nav-link">Sair</a></li>
             </ul>
         </div>
     </div>
