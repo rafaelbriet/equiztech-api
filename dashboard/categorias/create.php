@@ -25,7 +25,7 @@ get_partial('nav');
                         <p class="form-text text-danger d-none" id="categoryName-duplicate">Já existe uma categoria cadastrada com esse nome.</p>
                     </div>
                     <div class="d-flex gap-2 justify-content-end">
-                        <button type="button" class="btn btn-outline-secondary">Voltar</button>
+                        <a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/categorias" class="btn btn-outline-secondary">Cancelar</a>
                         <input type="submit" class="btn btn-primary" value="Cadastrar">
                     </div>
                 </form>

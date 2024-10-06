@@ -75,7 +75,7 @@ $access_level = json_decode($response_json, true);
                             <p class="form-text text-danger d-none" id="userEmail-duplicate">Já existe um usuário cadastrado com esse email.</p>
                         </div>
                         <div class="d-flex gap-2 justify-content-end">
-                            <a href="../usuarios" class="btn btn-outline-secondary">Voltar</a>
+                            <a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/usuarios" class="btn btn-outline-secondary">Cancelar</a>
                             <input type="submit" class="btn btn-primary" value="Atualizar">
                         </div>
                     </form>

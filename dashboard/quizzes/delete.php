@@ -42,7 +42,7 @@ $response = json_decode($response_json, true);
                             <p class="form-text text-danger d-none" id="categoryName-duplicate">Não foi possível deletar a pergunta no momento. Tente novamente.</p>
                         </div>
                         <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary">Voltar</button>
+                            <a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/quizzes" class="btn btn-outline-secondary">Cancelar</a>
                             <input type="submit" class="btn btn-danger" value="Deletar">
                         </div>
                     </form>
