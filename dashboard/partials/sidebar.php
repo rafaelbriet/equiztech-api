@@ -9,12 +9,20 @@
 
         <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3">
             <ul class="nav flex-column">
-                <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/me" class="nav-link">Meu perfil</a></li>
+                <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard" class="nav-link">Home</a></li>
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/usuarios" class="nav-link">Usuários</a></li>
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/categorias" class="nav-link">Categorias</a></li>
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/quizzes" class="nav-link">Quizes</a></li>
             </ul>
+
             <hr class="my-1">
+
+            <ul class="nav flex-column">
+                <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/me" class="nav-link">Meu perfil</a></li>
+            </ul>
+
+            <hr class="my-1">
+
             <ul class="nav flex-column">
                 <li class="navitem"><a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/logout" class="nav-link">Sair</a></li>
             </ul>
