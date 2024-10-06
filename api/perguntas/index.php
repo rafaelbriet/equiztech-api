@@ -76,9 +76,6 @@ function update_question() {
             $query = $connection->prepare('UPDATE respostas SET texto_alternativa = ?, correta = ? WHERE id = ?');
             $query->bind_param('sii', $answer['texto_alternativa'], $answer['correta'], $answer['id']);
             $query->execute();
-            if ($query->affected_rows > 0) {
-                echo 'update ok';
-            }
         }
 
         $response = [
