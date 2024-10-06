@@ -23,7 +23,7 @@ formLogin.addEventListener('submit', async (e) => {
             document.querySelector('#form-invalid').classList.remove('d-none');
         } else {
             document.querySelector('#form-invalid').classList.add('d-none');
-            Cookies.set('TOKEN', 'Bearer' + result.token);
+            Cookies.set('TOKEN', 'Bearer ' + result.token);
             window.location.href = 'dashboard'
         }
     } catch (error) {
