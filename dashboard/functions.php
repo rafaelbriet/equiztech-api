@@ -11,7 +11,7 @@ $dotenv->load();
 
 function only_admin_allowed() {
     if (!isset($_COOKIE['TOKEN'])) {
-        echo 'Você precisa estar logado para acessar esta página. <a href="#">Voltar para o login.</a>';
+        echo "Você precisa estar logado para acessar esta página. <a href=\"{$_ENV['BASE_URL']}\">Voltar para o login.</a>";
         exit;
     }
     
