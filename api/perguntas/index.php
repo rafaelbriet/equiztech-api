@@ -13,7 +13,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
-            $response = get_questions_by_id($id);
+            $response = get_question_by_id($id);
         } else {
             $response = get_questions();
         }
@@ -82,7 +82,7 @@ function update_question() {
         }
 
         $response = [
-            "pergunta" => get_questions_by_id($question_id)
+            "pergunta" => get_question_by_id($question_id)
         ];
 
     } catch (\Throwable $th) {
@@ -95,7 +95,7 @@ function update_question() {
     return $response;
 }
 
-function get_questions_by_id($id) {
+function get_question_by_id($id) {
     try {
         $connection = create_connection();
         $query = $connection->prepare('SELECT perguntas.id, texto_pergunta, explicacao, ativo, id_categoria, categorias.nome AS nome_categoria FROM perguntas INNER JOIN categorias ON categorias.id = perguntas.id_categoria WHERE perguntas.id = ?');
@@ -104,11 +104,8 @@ function get_questions_by_id($id) {
         $result = $query->get_result();
 
         if ($result->num_rows > 0) {
-            $response = [ 'perguntas' => [] ];
-
-            while ($row = $result->fetch_assoc()) {
-                array_push($response['perguntas'], array_merge($row, get_answers_by_question_id($row['id'])));
-            }
+            $question = $result->fetch_assoc();
+            $response = ['pergunta' => array_merge($question, get_answers_by_question_id($question['id']))];
         } else {
             $response = [
                 'erro' => [ 'mensagem' => 'Não foi encontrado uma pergunta com o ID fornecido.' ]
