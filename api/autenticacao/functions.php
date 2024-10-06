@@ -53,3 +53,15 @@ function only_admin_allowed() {
         exit;
     }
 }
+
+function only_logged_users() {
+    if (!is_user_logged()) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Você não tem permissão para acessar esta página.' ]
+        ];
+        header('Content-Type: application/json');
+        header('HTTP/1.1 403 Forbidden');
+        echo json_encode($response);
+        exit;
+    }
+}
