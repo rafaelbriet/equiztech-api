@@ -1,5 +1,10 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require('../../vendor/autoload.php');
 require('../autenticacao/functions.php');
 
 only_admin_allowed();
@@ -190,6 +195,8 @@ function create_user() {
                     ]
                 ]
             ];
+
+            send_welcome_email($user_email, $user_name, $user_access_level_id);
         }
     } catch (\Throwable $th) {
         $response = [
@@ -260,6 +267,82 @@ function get_user_by_email($email) {
     }
 
     return $response;
+}
+
+function send_welcome_email($email, $name, $accessLevel) {
+    $mailer = new PHPMailer(true);
+
+    if ($accessLevel == 1) {
+        $link = "<li>Baixe o aplicativo Equiztech em sua loja de aplicativos.</li>";
+    } else {
+        $link = "<li><a href=\"http://{$_ENV['BASE_URL']}\">Acesso o dashboard</a>.</li>";
+    }
+
+    $messageBody = "
+        <h2>Cadastro realizado com sucesso! 🎉 </h2>
+        <p>Olá, {$name}</p>
+        <p>Para começar a utilizar a plataforma, siga os passos abaixo:</p>
+        <ul>
+            {$link}
+            <li>Na tela de login, use a opção 'Esqueci minha senha' para redefinir sua senha.</li>
+        </ul>
+        <p>Se precisar de mais assistência, estamos à disposição!</p>
+        <p>Atenciosamente,<br>
+        Equipe Equiztech/p>
+    ";
+
+    try {
+        //Server settings
+        $mailer->isSMTP();
+        $mailer->Host = $_ENV['SMTP_HOST'];
+        $mailer->SMTPAuth = $_ENV['SMTP_AUTH'] == 'true' ? true : false;
+        $mailer->Username = $_ENV['SMTP_USERNAME'];
+        $mailer->Password = $_ENV['SMTP_PASSWORD'];
+        $mailer->Port = (int)$_ENV['SMTP_PORT'];
+        
+        switch ($_ENV['SMTP_DEBUG']) {
+            case 'client':
+                $mailer->SMTPDebug = SMTP::DEBUG_CLIENT; 
+                break;
+            case 'server':
+                $mailer->SMTPDebug = SMTP::DEBUG_SERVER; 
+                break;
+            case 'connection':
+                $mailer->SMTPDebug = SMTP::DEBUG_CONNECTION; 
+                break;
+            case 'lowlevel':
+                $mailer->SMTPDebug = SMTP::DEBUG_LOWLEVEL; 
+                break;
+            default:
+                $mailer->SMTPDebug = SMTP::DEBUG_OFF; 
+                break;
+        }
+
+        switch ($_ENV['SMTP_DEBUG']) {
+            case 'value':
+                # code...
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        //Recipients
+        $mailer->setFrom($mailer->Username, 'Equipe Equiztech');
+        $mailer->addAddress($email);
+
+        //Content
+        $mailer->isHTML(true);
+        $mailer->Subject = 'Equipe Equiztech - Cadastro realizado';
+        $mailer->Body = $messageBody;
+        $mailer->AltBody = strip_tags($messageBody);
+        $mailer->send();
+
+        return [ 'sucesso' => [ 'mensagem' => 'Token gerado com sucesso.'] ];
+    } catch (Exception $e) {
+        return [ 'sucesso' => [ 'mensagem' => 'Erro ao gerar o token. Tente novamente mais tarde.'] ];
+    }
 }
 
 header('Content-Type: application/json');
