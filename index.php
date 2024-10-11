@@ -1,3 +1,16 @@
+<?php
+
+require(dirname(__FILE__) . '/vendor/autoload.php');
+
+use Dotenv\Dotenv;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -35,7 +48,7 @@
 
         </form>
         <p class="mt-2 text-center">
-            <a href="#">Esqueci minha senha</a>
+            <a href="<?php echo $_ENV['BASE_URL']; ?>/dashboard/esqueci-minha-senha/etapa-1.php">Esqueci minha senha</a>
         </p>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

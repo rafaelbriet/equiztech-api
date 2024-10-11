@@ -53,6 +53,18 @@ CREATE TABLE usuarios(
     FOREIGN KEY (id_nivel_acesso) REFERENCES nivel_acesso(id)
 );
 
+CREATE TABLE redefinicao_senha(
+    id INT AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    data_criacao DATETIME NOT NULL,
+    data_validade DATETIME NOT NULL,
+    PRIMARY KEY(id, email)
+);
+
+CREATE INDEX idx_token on redefinicao_senha(token);
+CREATE INDEX idx_email on usuarios(email);
+
 -- INSERT USUARIO PADRÂO 
 insert into dados_pessoais (nome, sobrenome, data_nascimento)
 values ('Rafael', 'Briet', '1991-12-14'); 
