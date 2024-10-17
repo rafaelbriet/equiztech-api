@@ -1,5 +1,7 @@
 <?php
 
+use Respect\Validation\Validator as validator;
+
 require('../autenticacao/functions.php');
 
 require_once('../../dbconnection.php');
@@ -36,6 +38,12 @@ function register_user() {
         http_response_code(400);
         header('Content-Type: application/json');
         return json_encode([ 'erro' => [ 'mensagem' => 'Nenhum dado enviado.' ] ]);
+    }
+
+    if (validator::email()->validate($data['usuario']['email']) === false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'E-mail inválido.' ] ]);
     }
 
     try {
