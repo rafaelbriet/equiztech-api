@@ -40,10 +40,47 @@ function register_user() {
         return json_encode([ 'erro' => [ 'mensagem' => 'Nenhum dado enviado.' ] ]);
     }
 
+    // Validação dos dados enviados pelo usuário
+    if (validator::stringType()->notEmpty()->validate($data['dados_pessoais']['nome']) == false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'Nome inválido. É necessário fornecer seu nome para criar uma conta' ] ]);
+    }
+
+    if (validator::stringType()->notEmpty()->validate($data['dados_pessoais']['sobrenome']) == false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'Sobrenome inválido. É necessário fornecer seu nome para criar uma conta.' ] ]);
+    }
+
+    if (validator::minAge(13, 'Y-m-d')->validate($data['dados_pessoais']['data_nascimento']) == false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'Data de nascimento inválido. É necessário ser maior de 13 anos para criar uma conta.' ] ]);
+    }
+
     if (validator::email()->validate($data['usuario']['email']) === false) {
         http_response_code(400);
         header('Content-Type: application/json');
-        return json_encode([ 'erro' => [ 'mensagem' => 'E-mail inválido.' ] ]);
+        return json_encode([ 'erro' => [ 'mensagem' => 'E-mail inválido. É necessário fornecer um e-mail válido para criar uma conta.' ] ]);
+    }
+
+    if (validator::stringType()->notEmpty()->validate($data['usuario']['senha']) == false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'Senha inválida. É necessário fornecer uma senha para criar uma conta.' ] ]);
+    }
+
+    if (validator::length(6)->validate($data['usuario']['senha']) === false) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'Senha inválida. A senha deve conter ao menos 6 caracteres.' ] ]);
+    }
+
+    if (validator::falseVal()->validate($data['usuario']['termos_condicoes'])) {
+        http_response_code(400);
+        header('Content-Type: application/json');
+        return json_encode([ 'erro' => [ 'mensagem' => 'É necessário aceitar os Termos de Serviço e Política de Privacidade para criar uma conta.' ] ]);
     }
 
     try {
