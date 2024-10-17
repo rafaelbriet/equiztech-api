@@ -190,7 +190,7 @@ function send_reset_link($email, $url) {
 
         return [ 'sucesso' => [ 'mensagem' => 'Token gerado com sucesso.'] ];
     } catch (Exception $e) {
-        return [ 'sucesso' => [ 'mensagem' => 'Erro ao gerar o token. Tente novamente mais tarde.'] ];
+        return [ 'erro' => [ 'mensagem' => 'Erro ao gerar o token. Tente novamente mais tarde.'] ];
     }
 }
 
