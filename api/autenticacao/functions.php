@@ -11,12 +11,14 @@ $dotenv->load();
 
 function verify_login() {
     $headers = getallheaders();
+    $authorizationHeader = $headers['Authorization'] ?? $headers['authorization'];
 
-    if (!isset($headers['Authorization'])) {
+    if (!isset($authorizationHeader)) {
+        error_log('could not find the Authorization header');
         return [];
     }
 
-    $authorization = $headers['Authorization'];
+    $authorization = $authorizationHeader;
     $token = trim(str_replace('Bearer', '', $authorization));
 
     try {
