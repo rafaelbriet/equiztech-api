@@ -5,6 +5,7 @@ require('../autenticacao/functions.php');
 only_admin_allowed();
 
 require_once('../../dbconnection.php');
+require 'CategoryRepository.php';
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
@@ -132,23 +133,9 @@ function create_category() {
 }
 
 function get_categories() {
-    $response = [];
-
-    try {
-        $connection = create_connection();
-
-        $query = $connection->prepare('SELECT id, nome FROM categorias');
-        $query->execute();
-        $result = $query->get_result();
-        $response = [
-            "categorias" => $result->fetch_all(MYSQLI_ASSOC)
-        ];
-    } catch (\Throwable $th) {
-        $response = [
-            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
-        ];
-    }
-
+    $connection = create_connection();
+    $repository = new CategoryRepository($connection);
+    $response = $repository->getAll();
     return $response;
 }
 
