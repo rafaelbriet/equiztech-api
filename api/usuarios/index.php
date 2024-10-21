@@ -100,7 +100,8 @@ function update_user() {
             $query = $connection->prepare('UPDATE dados_pessoais SET nome = ?, sobrenome = ?, data_nascimento = ?, biografia = ?, nome_foto = ? WHERE id = ?');
             $query->bind_param('sssssi', $user_name, $user_surname, $user_birthday_date, $user_bio, $user_photo, $user_personal_data_id);
             $query->execute();
-
+            $update_successful = $query->affected_rows > 0;
+            
             if ($user_password) {
                 if ($user_already_exist) {
                     $query = $connection->prepare('UPDATE usuarios SET senha = ?, id_nivel_acesso = ? WHERE id = ?');
@@ -121,8 +122,8 @@ function update_user() {
 
             $query->execute();
 
-            if ($query->affected_rows > 0) {
-                $response = [ 'usuario' => get_user_by_id($user_id) ];
+            if ($update_successful) {
+                $response = get_user_by_id($user_id);
             } else {
                 $response = [
                     'erro' => [ 'mensagem' => 'Não foi possivel encontrar um usuário com o ID fornecido.' ]
