@@ -65,6 +65,28 @@ CREATE TABLE redefinicao_senha(
 CREATE INDEX idx_token on redefinicao_senha(token);
 CREATE INDEX idx_email on usuarios(email);
 
+CREATE TABLE partidas(
+    id INT AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    iniciada_em DATETIME NOT NULL,
+    encerrada_em DATETIME NOT NULL,
+    PRIMARY KEY(id, id_usuario),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+ALTER TABLE partidas ADD fuso_horario VARCHAR(64) NOT NULL;
+
+CREATE Table respostas_partida(
+    id INT AUTO_INCREMENT,
+    id_partida INT NOT NULL,
+    id_pergunta INT NOT NULL,
+    id_resposta_escolhida INT NOT NULL,
+    PRIMARY KEY(id, id_partida),
+    FOREIGN KEY (id_partida) REFERENCES partidas(id),
+    FOREIGN KEY (id_pergunta) REFERENCES perguntas(id),
+    FOREIGN KEY (id_resposta_escolhida) REFERENCES respostas(id)
+);
+
 -- INSERT USUARIO PADRÂO 
 insert into dados_pessoais (nome, sobrenome, data_nascimento)
 values ('Rafael', 'Briet', '1991-12-14'); 
