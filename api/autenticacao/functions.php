@@ -11,7 +11,7 @@ $dotenv->load();
 
 function verify_login() {
     $headers = getallheaders();
-    $authorizationHeader = $headers['Authorization'] ?? $headers['authorization'];
+    $authorizationHeader = $headers['Authorization'] ?? $headers['authorization'] ?? null;
 
     if (!isset($authorizationHeader)) {
         error_log('could not find the Authorization header');
