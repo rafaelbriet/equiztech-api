@@ -1,6 +1,6 @@
--- Active: 1729809433694@@127.0.0.1@3306@equiztech_api
+-- Active: 1729545499167@@127.0.0.1@3307@equiztech_api
 -- Total de partidas que um jogador realizou
-SELECT COUNT(*) FROM partidas WHERE id_usuario = 1;
+SELECT COUNT(*) AS total_partidas FROM partidas WHERE id_usuario = 1;
 
 -- Total de resposta que um jogador deu
 SELECT COUNT(*) FROM respostas_partida
