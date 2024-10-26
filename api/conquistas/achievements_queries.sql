@@ -8,7 +8,7 @@ INNER JOIN partidas on partidas.id = respostas_partida.id_partida
 WHERE partidas.id_usuario = 1;
 
 -- Total de respostas que um jogador acertou
-SELECT COUNT(*) FROM respostas_partida
+SELECT COUNT(*) AS total_respostas_correta FROM respostas_partida
 INNER JOIN partidas on partidas.id = respostas_partida.id_partida
 INNER JOIN respostas on respostas.id = respostas_partida.id_resposta_escolhida
 WHERE partidas.id_usuario = 1 AND respostas.correta = 1;

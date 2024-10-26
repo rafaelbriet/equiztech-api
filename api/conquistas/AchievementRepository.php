@@ -39,4 +39,20 @@ class AchievementRepository {
             throw $th;
         }
     }
+
+    function getTotalCorrectAnswers(int $user_id) {
+        try {
+            $query = 'SELECT COUNT(*) AS total_respostas_correta FROM respostas_partida
+                      INNER JOIN partidas on partidas.id = respostas_partida.id_partida
+                      INNER JOIN respostas on respostas.id = respostas_partida.id_resposta_escolhida
+                      WHERE partidas.id_usuario = ? AND respostas.correta = 1';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('i', $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
