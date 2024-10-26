@@ -28,7 +28,7 @@ WITH
         FROM partidas
         GROUP BY data_partida
     )
-SELECT MAX(total_partidas)
+SELECT MAX(total_partidas) AS maior_quantidade_partida_dia
 FROM partidas_por_dia;
 
 -- Sequencia atual de dias com partidas jogadas
