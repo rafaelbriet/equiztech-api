@@ -8,8 +8,20 @@ class AchievementRepository {
         $this->connection = $connection;
     }
 
-    function getAll() {
+    function getAll(int $user_id) {
+        try {
+            $result = [
+                $this->getTotalMatchsPlayed($user_id),
+                $this->getTotalAnswers($user_id),
+                $this->getTotalCorrectAnswers($user_id),
+                $this->getTotalMatchesPlayedSingleDay($user_id),
+                $this->getLongestStreakDaysPlayed($user_id),
+            ];
 
+            return $result;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     function getTotalMatchsPlayed(int $user_id) {
