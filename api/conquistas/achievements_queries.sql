@@ -56,5 +56,5 @@ WITH
         FROM grupos
         GROUP BY grupo
     )
-SELECT MAX(datas_consecutivas)
+SELECT MAX(datas_consecutivas) AS maior_sequencia_dia_jogados
 FROM sequencias;
