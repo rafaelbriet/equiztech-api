@@ -3,7 +3,7 @@
 SELECT COUNT(*) AS total_partidas FROM partidas WHERE id_usuario = 1;
 
 -- Total de resposta que um jogador deu
-SELECT COUNT(*) FROM respostas_partida
+SELECT COUNT(*) AS total_respostas FROM respostas_partida
 INNER JOIN partidas on partidas.id = respostas_partida.id_partida
 WHERE partidas.id_usuario = 1;
 
