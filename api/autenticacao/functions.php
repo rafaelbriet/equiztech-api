@@ -67,3 +67,17 @@ function only_logged_users() {
         exit;
     }
 }
+
+function only_current_user(int $user_id) {
+    $current_user = verify_login();
+
+    if ($current_user->usuario->id !== $user_id) {
+        $response = [
+            'erro' => [ 'mensagem' => 'Você não tem permissão para acessar esta página.' ]
+        ];
+        header('Content-Type: application/json');
+        header('HTTP/1.1 403 Forbidden');
+        echo json_encode($response);
+        exit;
+    }
+}
