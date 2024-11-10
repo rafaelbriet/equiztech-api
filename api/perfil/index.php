@@ -12,7 +12,8 @@ use Respect\Validation\Validator as validator;
 
 if (!isset($_GET['id_usuario'])) {
     $response = [
-        'erro' => [ 'mensagem' => 'É necessário fornecer o ID de um usuário para exibir suas conquistas.' ]
+        'erro' => [ 'mensagem' => 'Para acessar as informações de perfil é necessário fornecer o ID do usuário.' ]
+        
     ];
     header('Content-Type: application/json');
     http_response_code(400);
