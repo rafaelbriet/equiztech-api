@@ -46,7 +46,7 @@ class ProfileRepository {
         try {
             $this->connection->begin_transaction();
             $this->updateEmail($user_id, $data['usuario']['email']);
-            $this->updatePersonalData($user_id, $data['usuario']['dados_pessoais']);
+            $this->updatePersonalData($user_id, $data['dados_pessoais']);
             $this->connection->commit();
             return $this->getById($user_id);
         } catch (\Throwable $th) {

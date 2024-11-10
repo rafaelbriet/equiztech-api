@@ -44,21 +44,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
             exit;
         }
         
-        if (validator::stringType()->notEmpty()->validate($data['usuario']['dados_pessoais']['nome']) == false) {
+        if (validator::stringType()->notEmpty()->validate($data['dados_pessoais']['nome']) == false) {
             http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode([ 'erro' => [ 'mensagem' => 'Nome inválido. É necessário fornecer seu nome para criar uma conta' ] ]);
             exit;
         }
 
-        if (validator::stringType()->notEmpty()->validate($data['usuario']['dados_pessoais']['sobrenome']) == false) {
+        if (validator::stringType()->notEmpty()->validate($data['dados_pessoais']['sobrenome']) == false) {
             http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode([ 'erro' => [ 'mensagem' => 'Sobrenome inválido. É necessário fornecer seu nome para criar uma conta.' ] ]);
             exit;
         }
 
-        if (validator::minAge(13, 'Y-m-d')->validate($data['usuario']['dados_pessoais']['data_nascimento']) == false) {
+        if (validator::minAge(13, 'Y-m-d')->validate($data['dados_pessoais']['data_nascimento']) == false) {
             http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode([ 'erro' => [ 'mensagem' => 'Data de nascimento inválido. É necessário ser maior de 13 anos para criar uma conta.' ] ]);
