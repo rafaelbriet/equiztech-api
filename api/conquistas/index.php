@@ -23,13 +23,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $connection = create_connection();
         $repository = new AchievementRepository($connection);
         $result = $repository->getAll($user_id);
-        $response = [ 'consquistas' => [] ];
+        $response = [ 'conquistas' => [] ];
 
         for ($i = 0; $i < count($result); $i++) { 
             $achievement = $result[$i];
 
             foreach ($achievement as $key => $value) {
-                $response['consquistas'][$key] = $value;
+                $response['conquistas'][$key] = $value;
             }
         }
         break;
