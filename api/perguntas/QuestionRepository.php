@@ -8,6 +8,28 @@ class QuestionRepository {
         $this->connection = $connection;    
     }
 
+    function getQuestionAnswerResult(int $answer_id) {
+        try {
+            $query = 'SELECT
+                        perguntas.id as id_pergunta,
+                        respostas.id as id_resposta,
+                        correta
+                    FROM
+                        perguntas
+                    INNER JOIN 
+                        respostas ON respostas.id_pergunta = perguntas.id
+                    WHERE 
+                        respostas.id = ?';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('i', $answer_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     function getQuizByCategoryId(int $category_id, int $limit = 5) {
         try {
             $query = $this->connection->prepare('SELECT id, texto_pergunta, explicacao FROM perguntas WHERE id_categoria = ? AND ativo = 1 ORDER BY RAND() LIMIT ?');
