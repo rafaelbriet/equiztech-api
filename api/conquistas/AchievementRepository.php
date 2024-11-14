@@ -70,22 +70,16 @@ class AchievementRepository {
 
     function getTotalMatchesPlayedSingleDay(int $user_id) {
         try {
-            $query = 'WITH
-                      partidas(data_partida) AS (
-                          select CAST(iniciada_em AS DATE) AS data_partida
-                          FROM partidas
-                          WHERE id_usuario = ?
-                          ORDER BY data_partida
-                      ),
-                      partidas_por_dia AS (
-                          SELECT
-                              data_partida, 
-                              COUNT(*) AS total_partidas
-                          FROM partidas
-                          GROUP BY data_partida
-                      )
-                      SELECT MAX(total_partidas) AS maior_quantidade_partida_dia
-                      FROM partidas_por_dia';
+            $query = 'SELECT 
+                        MAX(total_partida_dia) as maior_quantidade_partida_dia
+                    FROM (
+                        SELECT 
+                            DATE(iniciada_em) as data_partida,
+                            COUNT(*) as total_partida_dia
+                        FROM partidas
+                        WHERE id_usuario = ?
+                        GROUP BY data_partida
+                    ) AS partidas_por_dia';
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param('i', $user_id);
             $stmt->execute();
@@ -98,22 +92,24 @@ class AchievementRepository {
 
     function getLongestStreakDaysPlayed(int $user_id) {
         try {
-            $query = 'WITH
-                      partidas(data_partida) AS (
-                          select CAST(iniciada_em AS DATE) AS data_partida
-                          FROM partidas
-                          WHERE id_usuario = ?
-                          ORDER BY data_partida
-                      ),
-                      partidas_por_dia AS (
-                          SELECT
-                              data_partida, 
-                              COUNT(*) AS total_partidas
-                          FROM partidas
-                          GROUP BY data_partida
-                      )
-                      SELECT MAX(total_partidas) AS maior_sequencia_dia_jogados
-                      FROM partidas_por_dia';
+            $query = 'SELECT 
+                          MAX(dias_consecutivos) AS maior_sequencia_consecutiva
+                      FROM (
+                          SELECT COUNT(*) AS dias_consecutivos
+                          FROM (
+                              SELECT data_partida,
+                                  @grupo := IF(data_partida = DATE_ADD(@prev_data_partida, INTERVAL 1 DAY), @grupo, @grupo + 1) AS grupo,
+                                  @prev_data_partida := data_partida
+                              FROM (
+                                  SELECT DISTINCT DATE(iniciada_em) AS data_partida
+                                  FROM partidas
+                                  WHERE id_usuario = ?
+                                  ORDER BY data_partida
+                              ) AS datas
+                              CROSS JOIN (SELECT @grupo := 0, @prev_data_partida := NULL) AS vars
+                          ) AS grupos
+                          GROUP BY grupo
+                      ) AS sequencias';
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param('i', $user_id);
             $stmt->execute();
