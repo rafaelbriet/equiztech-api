@@ -1,9 +1,9 @@
 <?php
 
 class CategoryRepository {
-    private $connection;
+    private mysqli $connection;
 
-    function __construct($connection)
+    function __construct(mysqli $connection)
     {
         $this->connection = $connection;    
     }
