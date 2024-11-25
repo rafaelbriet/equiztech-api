@@ -133,10 +133,17 @@ function create_category() {
 }
 
 function get_categories() {
-    $connection = create_connection();
-    $repository = new CategoryRepository($connection);
-    $response = $repository->getAll();
-    return $response;
+    try {
+        $connection = create_connection();
+        $repository = new CategoryRepository($connection);
+        $categories = $repository->getAll();
+        return $categories;
+    } catch (\Throwable $th) {
+        return [
+            'erro' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!',
+            'detalhes' => $th->getMessage(),
+        ];
+    }
 }
 
 function get_category_by_id($id) {
