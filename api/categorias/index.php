@@ -111,7 +111,14 @@ function create_category() {
         ];
     }
 
-    if (validator::stringType()->notEmpty()->validate($data['categoria']['nome']) === false) {
+    if (validator::key('nome')->validate($data) === false) {
+        return [
+            'erro' => 'Erro no JSON',
+            'detalhes' => 'Não foi possível encontrar a chave "nome".',
+        ];
+    }
+
+    if (validator::stringType()->notEmpty()->validate($data['nome']) === false) {
         return [
             'erro' => 'Nome vazio',
             'detalhes' => 'Uma categoria precisa de uma nome.',
@@ -121,16 +128,16 @@ function create_category() {
     try {
         $connection = create_connection();
         $repository = new CategoryRepository($connection);
-        $category_from_db = $repository->getByName($data['categoria']['nome']);
+        $category_from_db = $repository->getByName($data['nome']);
 
         if ($category_from_db !== null) {
             return [
                 'erro' => 'Categoria já existe',
-                'detalhes' => "Uma categoria com o nome \"{$data['categoria']['nome']}\" já existe.",
+                'detalhes' => "Uma categoria com o nome \"{$data['nome']}\" já existe.",
             ];
         }
 
-        $created_category = $repository->create($data['categoria']['nome']);
+        $created_category = $repository->create($data['nome']);
         return $created_category;
     } catch (\Throwable $th) {
         return [
