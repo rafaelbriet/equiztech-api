@@ -77,4 +77,21 @@ class CategoryRepository {
             throw $th;
         }
     }
+
+    function delete(int $id): bool {
+        try {
+            $query = 'DELETE FROM categorias WHERE id = ?';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+
+            if ($stmt->affected_rows > 0) {
+                return true;
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
