@@ -60,4 +60,21 @@ class CategoryRepository {
             throw $th;
         }
     }
+
+    function edit(int $id, string $name): array|null {
+        try {
+            $query = 'UPDATE categorias SET nome = ? WHERE id = ?';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('si', $name, $id);
+            $stmt->execute();
+
+            if ($stmt->affected_rows > 0) {
+                return $this->getById($id);
+            }
+
+            return null;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

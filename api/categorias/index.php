@@ -22,7 +22,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         break; 
     case 'PUT':
-        $response = update_category();
+        $response = update_category($_GET['id'] ?? null);
         break;
     case 'DELETE':
         $response = delete_category();
@@ -59,45 +59,66 @@ function delete_category() {
     return $response;
 }
 
-function update_category() {
-    $request_body = file_get_contents('php://input');
-    $data = json_decode($request_body, true);
-    $category_name = $data['categoria']['nome'];
-    $category_id = $_GET['id'];
-
-    try {
-        $connection = create_connection();
-        $category_already_exist = get_category_by_name($category_name);
-
-        if ($category_already_exist) {
-            $response = [
-                'erro' => [ 'mensagem' => 'Já existe uma categoria cadastrada com esse nome.' ]
-            ];
-        } else {
-            $query = $connection->prepare('UPDATE categorias SET nome = ? WHERE id = ?');
-            $query->bind_param('si', $category_name, $category_id);
-            $query->execute();
-            
-            if ($query->affected_rows > 0) {
-                $response = $response = [
-                    "categoria" => [
-                        "id" => $category_id,
-                        "nome" => $category_name,
-                    ]
-                ];
-            } else {
-                $response = [
-                    'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
-                ];
-            }
-        }
-    } catch (\Throwable $th) {
-        $response = [
-            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+function update_category($id) {
+    if (validator::intVal()->positive()->validate($id) === false) {
+        return [
+            'erro' => 'ID inválido',
+            'detalhes' => 'ID de uma categoria é um número inteiro positivo.',
         ];
     }
 
-    return $response;
+    $request_body = file_get_contents('php://input');
+    $data = json_decode($request_body, true);
+
+    if ($data === null) {
+        return [
+            'erro' => 'Erro no JSON',
+            'detalhes' => json_last_error_msg(),
+        ];
+    }
+
+    if (validator::key('nome')->validate($data) === false) {
+        return [
+            'erro' => 'Erro no JSON',
+            'detalhes' => 'Não foi possível encontrar a chave "nome".',
+        ];
+    }
+
+    if (validator::stringType()->notEmpty()->validate($data['nome']) === false) {
+        return [
+            'erro' => 'Nome vazio',
+            'detalhes' => 'Uma categoria precisa de uma nome.',
+        ];
+    }
+
+    try {
+        $connection = create_connection();
+        $repository = new CategoryRepository($connection);
+        $category_from_db = $repository->getByName($data['nome']);
+
+        if ($category_from_db !== null) {
+            return [
+                'erro' => 'Categoria já existe',
+                'detalhes' => "Uma categoria com o nome \"{$data['nome']}\" já existe.",
+            ];
+        }
+
+        $edited_category = $repository->edit($id, $data['nome']);
+
+        if ($edited_category === null) {
+            return [
+                'erro' => 'ID inexistente',
+                'detalhes' => 'Não foi possivel encontrar uma categoria com o ID fornecido.',
+            ];
+        }
+
+        return $edited_category;
+    } catch (\Throwable $th) {
+        return [
+            'erro' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!',
+            'detalhes' => $th->getMessage(),
+        ];
+    }
 }
 
 function create_category() {
@@ -188,25 +209,6 @@ function get_category_by_id($id) {
             'detalhes' => $th->getMessage(),
         ];
     }
-}
-
-function get_category_by_name($name) {
-    $response = [];
-
-    try {
-        $connection = create_connection();
-        $query = $connection->prepare('SELECT id, nome FROM categorias WHERE nome = ?');
-        $query->bind_param('s', $name);
-        $query->execute();
-        $result = $query->get_result();
-        $response = $result->fetch_assoc();
-    } catch (\Throwable $th) {
-        $response = [
-            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
-        ];
-    }
-
-    return $response;
 }
 
 header('Content-Type: application/json');
