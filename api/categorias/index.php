@@ -1,5 +1,7 @@
 <?php
 
+use Respect\Validation\Validator as validator;
+
 require('../autenticacao/functions.php');
 
 only_admin_allowed();
@@ -147,31 +149,32 @@ function get_categories() {
 }
 
 function get_category_by_id($id) {
-    $response = [];
-
-    try {
-        $connection = create_connection();
-        $query = $connection->prepare('SELECT id, nome FROM categorias WHERE id = ?');
-        $query->bind_param('i', $id);
-        $query->execute();
-        $result = $query->get_result();
-        
-        if ($result->num_rows > 0) {
-            $response = [
-                "categoria" => $result->fetch_assoc()
-            ];
-        } else {
-            $response = [
-                'erro' => [ 'mensagem' => 'Não foi possivel encontrar uma categoria com o ID fornecido.' ]
-            ];
-        }
-    } catch (\Throwable $th) {
-        $response = [
-            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+    if (validator::intVal()->positive()->validate($id) === false) {
+        return [
+            'erro' => 'ID inválido',
+            'detalhes' => 'ID de uma categoria é um número inteiro positivo.',
         ];
     }
 
-    return $response;
+    try {
+        $connection = create_connection();
+        $repository = new CategoryRepository($connection);
+        $category = $repository->getById($id);
+
+        if ($category === null) {
+            return [
+                'erro' => 'ID inválido',
+                'detalhes' => 'Não foi possivel encontrar uma categoria com o ID fornecido.',
+            ];
+        }
+        
+        return $category;
+    } catch (\Throwable $th) {
+        return [
+            'erro' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!',
+            'detalhes' => $th->getMessage(),
+        ];
+    }
 }
 
 function get_category_by_name($name) {

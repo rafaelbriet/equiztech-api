@@ -19,4 +19,17 @@ class CategoryRepository {
             throw $th;
         }
     }
+    
+    function getById(int $id): array|null {
+        try {
+            $query = 'SELECT id, nome FROM categorias WHERE id = ?';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
