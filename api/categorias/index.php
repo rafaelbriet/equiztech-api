@@ -103,35 +103,41 @@ function update_category() {
 function create_category() {
     $request_body = file_get_contents('php://input');
     $data = json_decode($request_body, true);
-    $category_name = $data['categoria']['nome'];
-    $response = [];
 
-    try {
-        $connection = create_connection();
-        $category_already_exist = get_category_by_name($category_name);
-
-        if ($category_already_exist) {
-            $response = [
-                'erro' => [ 'mensagem' => 'Já existe uma categoria cadastrada com esse nome.' ]
-            ];
-        } else {
-            $query = $connection->prepare('INSERT INTO categorias (nome) VALUES (?)');
-            $query->bind_param('s', $category_name);
-            $query->execute();
-            $response = [
-                "categoria" => [
-                    "id" => $query->insert_id,
-                    "nome" => $category_name,
-                ]
-            ];
-        }
-    } catch (\Throwable $th) {
-        $response = [
-            'erro' => [ 'mensagem' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!' ]
+    if ($data === null) {
+        return [
+            'erro' => 'Erro no JSON',
+            'detalhes' => json_last_error_msg(),
         ];
     }
 
-    return $response;
+    if (validator::stringType()->notEmpty()->validate($data['categoria']['nome']) === false) {
+        return [
+            'erro' => 'Nome vazio',
+            'detalhes' => 'Uma categoria precisa de uma nome.',
+        ];
+    }
+    
+    try {
+        $connection = create_connection();
+        $repository = new CategoryRepository($connection);
+        $category_from_db = $repository->getByName($data['categoria']['nome']);
+
+        if ($category_from_db !== null) {
+            return [
+                'erro' => 'Categoria já existe',
+                'detalhes' => "Uma categoria com o nome \"{$data['categoria']['nome']}\" já existe.",
+            ];
+        }
+
+        $created_category = $repository->create($data['categoria']['nome']);
+        return $created_category;
+    } catch (\Throwable $th) {
+        return [
+            'erro' => 'Ocorreu um erro. Estamos trabalhando nisso e consertaremos em breve. Obrigado pela sua paciência!',
+            'detalhes' => $th->getMessage(),
+        ];
+    }
 }
 
 function get_categories() {
