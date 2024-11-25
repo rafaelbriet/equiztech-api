@@ -176,7 +176,7 @@ function get_category_by_id($id) {
 
         if ($category === null) {
             return [
-                'erro' => 'ID inválido',
+                'erro' => 'ID inexistente',
                 'detalhes' => 'Não foi possivel encontrar uma categoria com o ID fornecido.',
             ];
         }
