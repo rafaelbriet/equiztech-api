@@ -15,7 +15,7 @@ get_partial('nav');
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-white">
 
             <div class="d-flex justify-content-between flex-wrap flex-md-no-wrap align-items-center border-bottom pt-3 pb-2 mb-3">
-                <h1 class="h2">categorias</h1>
+                <h1 class="h2">Quizzes</h1>
                 <a href="create.php" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Adicionar</a>
             </div>
 
