@@ -62,8 +62,8 @@ $access_level = json_decode($response_json, true);
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="userBio" class="form-label"><?php echo $user['usuario']['biografia']; ?></label>
-                            <textarea class="form-control" id="userBio" rows="8"></textarea>
+                            <label for="userBio" class="form-label">Biografia</label>
+                            <textarea class="form-control" id="userBio" rows="8"><?php echo $user['usuario']['biografia']; ?></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="userBirthday" class="form-label">Data de nascimento</label>
