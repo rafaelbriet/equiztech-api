@@ -40,23 +40,23 @@ get_partial('nav');
 
             <!-- USUÁRIOS -->
             <div class="row">
-                <h3 class="h3">Usuários</h3>
+                <h3 class="fs-5">Usuários</h3>
                 <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Usuários</h4>
+                            <p class="card-title">Total de Usuários</p>
                             <p><?php display_stat('total_usuarios'); ?></p>
                         </div>
                     </div>
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Administradores</h4>
+                            <p class="card-title">Total de Administradores</p>
                             <p><?php display_stat('total_administradores'); ?></p>
                         </div>
                     </div>
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Jogadores</h4>
+                            <p class="card-title">Total de Jogadores</p>
                             <p><?php display_stat('total_jogadores'); ?></p>
                         </div>
                     </div>
@@ -66,68 +66,68 @@ get_partial('nav');
 
             <!-- CATEGORIAS -->
             <div class="row mt-3">
-                <h3 class="h3">Categorias</h3>
+                <h3 class="fs-5">Categorias</h3>
                 <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Categorias</h4>
+                            <p class="card-title">Total de Categorias</p>
                             <p><?php display_stat('total_categorias'); ?></p>
                         </div>
                     </div>
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Perguntas</h4>
+                            <p class="card-title">Total de Perguntas</p>
                             <p><?php display_stat('total_perguntas'); ?></p>
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Total de Perguntas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($response['total_pergunta_por_categoria']) > 0) : ?>
-                            <?php foreach ($response['total_pergunta_por_categoria'] as $item) : ?>
-                                <tr>
-                                    <td><?php echo $item['nome_categoria']; ?></td>
-                                    <td><?php echo $item['total_perguntas']; ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered table-striped">
+                        <thead>
                             <tr>
-                                <td colspan="2">Nenhuma categoria cadastrada.</td>
+                                <th>Categoria</th>
+                                <th>Total de Perguntas</th>
                             </tr>
-                        <?php endif ?>
-                        
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <?php if (count($response['total_pergunta_por_categoria']) > 0) : ?>
+                                <?php foreach ($response['total_pergunta_por_categoria'] as $item) : ?>
+                                    <tr>
+                                        <td><?php echo $item['nome_categoria']; ?></td>
+                                        <td><?php echo $item['total_perguntas']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="2">Nenhuma categoria cadastrada.</td>
+                                </tr>
+                            <?php endif ?>
+                            
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <!-- FIM CATEGORIAS -->
 
             <!-- PARTIDAS -->
             <div class="row">
-                <h3 class="h3">Partidas</h3>
+                <h3 class="fs-5">Partidas</h3>
                 <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Partidas</h4>
+                            <p class="card-title">Total de Partidas</p>
                             <p><?php display_stat('total_partidas'); ?></p>
                         </div>
                     </div>
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Perguntas Respondidas</h4>
+                            <p class="card-title">Total de Perguntas Respondidas</p>
                             <p><?php display_stat('total_perguntas_respondidas'); ?></p>
                         </div>
                     </div>
                     <div class="card flex-md-fill">
                         <div class="card-body">
-                            <h4 class="card-title">Total de Perguntas Respondidas Corretamente</h4>
+                            <p class="card-title">Total de Perguntas Respondidas Corretamente</p>
                             <p><?php display_stat('total_perguntas_respondidas_corretamente'); ?></p>
                         </div>
                     </div>
