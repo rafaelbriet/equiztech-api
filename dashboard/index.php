@@ -90,12 +90,19 @@ get_partial('nav');
                         </tr>
                     </thead>
                     <tbody>
+                        <?php if (count($response['total_pergunta_por_categoria']) > 0) : ?>
                         <?php foreach ($response['total_pergunta_por_categoria'] as $item) : ?>
                             <tr>
                                 <td><?php echo $item['nome_categoria']; ?></td>
                                 <td><?php echo $item['total_perguntas']; ?></td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="2">Nenhuma categoria cadastrada.</td>
+                            </tr>
+                        <?php endif ?>
+                        
                     </tbody>
                 </table>
             </div>
