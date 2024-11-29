@@ -21,7 +21,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ...$repository->getTotalMatches(),
             "total_pergunta_por_categoria" => $repository->getTotalQuizzesByCategory(),
             ...$repository->getTotalQuizzesAnswered(),
-            ...$repository->getTotalQuizzesAnsweredCorrectly(),
+            ...$repository->getTotalQuizzesAnsweredCorrectly() ?? ['total_perguntas_respondidas_corretamente' => 0],
         ];
         break;
     default:
