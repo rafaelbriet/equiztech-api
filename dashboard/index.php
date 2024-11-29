@@ -41,7 +41,7 @@ get_partial('nav');
             <!-- USUÁRIOS -->
             <div class="row">
                 <h3 class="h3">Usuários</h3>
-                <div class="cards d-flex flex-md-no-wrap g-2" style="gap: 16px">
+                <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
                             <h4 class="card-title">Total de Usuários</h4>
@@ -67,7 +67,7 @@ get_partial('nav');
             <!-- CATEGORIAS -->
             <div class="row mt-3">
                 <h3 class="h3">Categorias</h3>
-                <div class="cards d-flex flex-md-no-wrap g-2" style="gap: 16px">
+                <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
                             <h4 class="card-title">Total de Categorias</h4>
@@ -91,12 +91,12 @@ get_partial('nav');
                     </thead>
                     <tbody>
                         <?php if (count($response['total_pergunta_por_categoria']) > 0) : ?>
-                        <?php foreach ($response['total_pergunta_por_categoria'] as $item) : ?>
-                            <tr>
-                                <td><?php echo $item['nome_categoria']; ?></td>
-                                <td><?php echo $item['total_perguntas']; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                            <?php foreach ($response['total_pergunta_por_categoria'] as $item) : ?>
+                                <tr>
+                                    <td><?php echo $item['nome_categoria']; ?></td>
+                                    <td><?php echo $item['total_perguntas']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
                                 <td colspan="2">Nenhuma categoria cadastrada.</td>
@@ -112,7 +112,7 @@ get_partial('nav');
             <!-- PARTIDAS -->
             <div class="row">
                 <h3 class="h3">Partidas</h3>
-                <div class="cards d-flex flex-md-no-wrap g-2" style="gap: 16px">
+                <div class="cards d-flex flex-column flex-md-row g-2" style="gap: 16px">
                     <div class="card flex-md-fill">
                         <div class="card-body">
                             <h4 class="card-title">Total de Partidas</h4>
