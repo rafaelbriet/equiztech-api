@@ -83,7 +83,7 @@ $user = json_decode($response_json, true);
                         </div>
                     </div>
                 </div>
-                <script src="<?php echo $_ENV['BASE_URL']; ?>/dashboard/me/index.js"></script>
+                <script src="<?php echo $_ENV['BASE_URL']; ?>/dashboard/me/me.js"></script>
             <?php endif; ?>
         </main>
     </div>

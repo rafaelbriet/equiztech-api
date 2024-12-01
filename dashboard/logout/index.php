@@ -8,6 +8,6 @@ get_partial('nav');
 
 ?>
 
-<script src="<?php echo $_ENV['BASE_URL']; ?>/dashboard/logout/index.js"></script>
+<script src="<?php echo $_ENV['BASE_URL']; ?>/dashboard/logout/me.js"></script>
 
 <?php get_footer(); ?>

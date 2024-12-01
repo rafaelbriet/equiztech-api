@@ -123,17 +123,10 @@ function get_questions() {
         $query = $connection->prepare('SELECT perguntas.id, texto_pergunta, explicacao, ativo, id_categoria, categorias.nome AS nome_categoria FROM perguntas INNER JOIN categorias ON categorias.id = perguntas.id_categoria');
         $query->execute();
         $result = $query->get_result();
+        $response = [ 'perguntas' => [] ];
 
-        if ($result->num_rows > 0) {
-            $response = [ 'perguntas' => [] ];
-
-            while ($row = $result->fetch_assoc()) {
-                array_push($response['perguntas'], array_merge($row, get_answers_by_question_id($row['id'])));
-            }
-        } else {
-            $response = [
-                'erro' => [ 'mensagem' => 'Não foi encontrado uma pergunta com o ID fornecido.' ]
-            ];
+        while ($row = $result->fetch_assoc()) {
+            array_push($response['perguntas'], array_merge($row, get_answers_by_question_id($row['id'])));
         }
     } catch (\Throwable $th) {
         $response = [
